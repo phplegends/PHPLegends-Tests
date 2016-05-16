@@ -3,63 +3,34 @@ namespace PHPLegends\Tests;
 
 class Bench
 {
-    protected $tests = array();
-    private $executed  = false;
+    private $list     = array();
+    private $results  = array();
+    private $executed = false;
+    private $emptyTest;
 
-    public function addTest($label, callable $func, $loops = 1000, array $args = array())
+    public function __construct()
+    {
+        $this->emptyTest = $this->addTest(function() {})->cicles(1);
+    }
+
+    public function __destruct()
+    {
+        $this->emptyTest = $this->list = $this->results = null;
+    }
+
+    public function addTest(callable $func)
     {
         if ($this->executed) {
             throw new \RuntimeException('addTest called after run start');
         }
 
-        $this->tests[] = array(
-            'arguments' => $args,
-            'function'  => $func,
-            'loops'     => $loops,
-            'result'    => [
-                'memory' => null,
-                'time'   => null,
-                'label'  => $label
-            ]
-        );
+        $result = &$this->results[count($this->results)];
 
-        return count($this->tests) - 1;
-    }
+        $current = new BenchObject($func, $result);
 
-    public function removeTest($index)
-    {
-        if ($this->executed) {
-            throw new \RuntimeException('removeTest called after run start');
-        }
+        $this->list[] = $current;
 
-        if (is_int($index) === false) {
-            throw new \InvalidArgumentException('removeTest only accepts integers');
-        }
-
-        if (isset($this->tests[$index])) {
-            $this->tests[$index] = null;
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public function results($index = -1)
-    {
-        if (is_int($index) === false || $index < -1) {
-            throw new \InvalidArgumentException('removeTest only accepts integers or empty');
-        }
-
-        if ($index === -1) {
-            foreach ($this->tests as $key => $value) {
-                $results[$key] = $value['result'];
-            }
-
-            return $results;
-        }
-
-        return empty($this->tests[$i]['result']['label']) ? false : $this->tests[$i]['result'];
+        return $current;
     }
 
     public function run()
@@ -68,40 +39,44 @@ class Bench
             throw new \RuntimeException('run can only be called once');
         }
 
-        if (empty($this->tests)) {
+        if (empty($this->list)) {
             throw new \RuntimeException('run can\'t start, no tests addeds');
         }
 
         $this->executed = true;
 
-        $this->tests = array_filter($this->tests);
+        $this->list = array_filter($this->list, function($obj) {
+            return $obj->available();
+        });
 
-        $j = count($this->tests);
+        $j = count($this->list);
 
-        for ($i = 0; $i < $j; ++$i) {
-            $this->perfom($i);
+        foreach ($this->list as $key => $obj) {
+            if ($obj->available()) {
+                $this->perfom($key);
+            }
         }
     }
 
     protected function perfom($index)
     {
-        $call  = $this->tests[$index]['function'];
-        $loops = $this->tests[$index]['loops'];
-        $args  = $this->tests[$index]['arguments'];
+        $obj = $this->list[$index];
 
-        $inTime = microtime();
+        $cicles = $obj->getCicles();
+
+        $inTime   = microtime();
         $inMemory = memory_get_usage();
 
-        for ($i = 0; $i < $loops; ++$i) {
-            call_user_func_array($call, $args);
+        for ($i = 0; $i < $cicles; ++$i) {
+            $obj->exec();
         }
 
-        $time = microtime() - $inTime;
+        $time   = microtime() - $inTime;
         $memory = memory_get_usage() - $inMemory;
 
-        $call = $args = $call = null;
+        $obj = null;
 
-        $this->tests[$index]['result']['memory'] = $memory;
-        $this->tests[$index]['result']['time'] = $time;
+        $this->results[$index]['memory'] = $memory;
+        $this->results[$index]['time']   = $time;
     }
 }
