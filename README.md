@@ -1,22 +1,23 @@
-#PHPLegends\Test
+#PHPLegends\Test\Bench
 
 Usage:
 
 ```php
 <?php
-use PHPLegends\Test;
+use PHPLegends\Tests\Bench;
 
-class Foo
-{
-    static function bar() {}
-}
+$test = new Bench;
 
-$bench = new Bench;
-$bench->addTest(function () { 1 + 1; });
-$bench->addTest('\PHPLegends\Tests\Foo::bar');
-$bench->addTest(function ($a, $b) { $a + $b; }, 1000, array(1, 2));
+$test->addTest('Test call using string', function() {
+    $foo = '\\Controller\\foo';
+    $foo(1, 2);
+}, 15000);
 
-$bench->run();
+$test->addTest('Test call using call_user_func', function() {
+    call_user_func('\\Controller\\foo', 1, 2);
+}, 15000);
 
-var_dump($bench->results());
+$test->run();
+
+print_r($test->results(), true);
 ```

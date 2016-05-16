@@ -3,10 +3,10 @@ namespace PHPLegends\Tests;
 
 class Bench
 {
-    private $tests = array();
+    protected $tests = array();
     private $executed  = false;
 
-    public function addTest(callable $func, $loops = 1000, array $args = array())
+    public function addTest($label, callable $func, $loops = 1000, array $args = array())
     {
         if ($this->executed) {
             throw new \RuntimeException('addTest called after run start');
@@ -16,7 +16,11 @@ class Bench
             'arguments' => $args,
             'function'  => $func,
             'loops'     => $loops,
-            'result'    => false
+            'result'    => [
+                'memory' => null,
+                'time'   => null,
+                'label'  => $label
+            ]
         );
 
         return count($this->tests) - 1;
@@ -55,7 +59,7 @@ class Bench
             return $results;
         }
 
-        return empty($this->tests[$i]['result']) ? false : $this->tests[$i]['result'];
+        return empty($this->tests[$i]['result']['label']) ? false : $this->tests[$i]['result'];
     }
 
     public function run()
@@ -75,7 +79,7 @@ class Bench
         $j = count($this->tests);
 
         for ($i = 0; $i < $j; ++$i) {
-            $this->tests[$i]['result'] = $this->perfom($i);
+            $this->perfom($i);
         }
     }
 
@@ -85,14 +89,19 @@ class Bench
         $loops = $this->tests[$index]['loops'];
         $args  = $this->tests[$index]['arguments'];
 
-        $initiate = microtime();
+        $inTime = microtime();
+        $inMemory = memory_get_usage();
 
-        for ($i = 0; $i < $loops; ++$i) call_user_func_array($call, $args);
+        for ($i = 0; $i < $loops; ++$i) {
+            call_user_func_array($call, $args);
+        }
 
-        $resp = microtime() - $initiate;
+        $time = microtime() - $inTime;
+        $memory = memory_get_usage() - $inMemory;
 
         $call = $args = $call = null;
 
-        return $resp;
+        $this->tests[$index]['result']['memory'] = $memory;
+        $this->tests[$index]['result']['time'] = $time;
     }
 }
