@@ -14,7 +14,8 @@
     },
     "autoload" : {
         "psr-4" : {
-            "PHPLegends\\Tests\\" : "src/"
+            "PHPLegends\\Tests\\" : "src/",
+            "Proposal\\Test\\"      : "proposal"
         }
     }
 }

@@ -4,6 +4,7 @@ namespace PHPLegends\Tests;
 class Bench
 {
     protected $tests = array();
+    
     private $executed  = false;
 
     public function addTest($label, callable $func, $loops = 1000, array $args = array())
