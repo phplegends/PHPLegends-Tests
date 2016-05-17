@@ -27,13 +27,13 @@ class BasicTest extends PHPUnit_Framework_TestCase
     {
         $time = $this->test->time();
         $this->assertInternalType('float', $time, '$time don\'t return float value');
-        $this->assertTrue($time > 0,   '$time returns negative value');
+        $this->assertTrue($time >= 0,   '$time returns negative value');
     }
 
     public function testMemory()
     {
         $memory = $this->test->memory();
         $this->assertInternalType('int', $memory, '$memory don\'t return int value');
-        $this->assertTrue($memory > 0, '$memory returns negative value');
+        $this->assertTrue($memory >= 0, '$memory returns negative value');
     }
 }
