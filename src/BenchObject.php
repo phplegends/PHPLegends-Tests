@@ -73,11 +73,19 @@ class BenchObject
 
     public function memory()
     {
-        return isset($this->result['memory']) ? $this->result['memory'] : false;
+        if (isset($this->result['memory'])) {
+            return $this->result['memory'];
+        }
+
+        throw new Exception('Bench::run was not executed');
     }
 
     public function time()
     {
-        return isset($this->result['time']) ? $this->result['time'] : false;
+        if (isset($this->result['time'])) {
+            return $this->result['time'];
+        }
+
+        throw new Exception('Bench::run was not executed');
     }
 }

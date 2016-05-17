@@ -3,7 +3,6 @@ namespace PHPLegends\Tests;
 
 class Bench implements \IteratorAggregate
 {
-
     private $list          = array();
     private $results       = array();
     private $executed      = false;
@@ -17,6 +16,11 @@ class Bench implements \IteratorAggregate
     public function __destruct()
     {
         $this->list = $this->results = null;
+    }
+
+    public function isExecuted()
+    {
+        return $this->executed;
     }
 
     public function defaultCicles($cicles = null)
