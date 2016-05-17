@@ -1,5 +1,5 @@
 <?php
-use PHPLegends\Test\Bench;
+use PHPLegends\Tests\Bench;
 
 class BasicTest extends PHPUnit_Framework_TestCase
 {
