@@ -1,2 +1,4 @@
 /vendor/
 /.phpintel/
+tests.sublime-project
+tests.sublime-workspace

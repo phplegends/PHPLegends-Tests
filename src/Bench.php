@@ -9,7 +9,6 @@ class Bench
     private $executed      = false;
     private $defaultCicles = 1000;
 
-
     public function __construct()
     {
         $this->addTest(function() {})->cicles(1);
@@ -87,5 +86,15 @@ class Bench
 
         $this->results[$index]['memory'] = $memory;
         $this->results[$index]['time']   = $time;
+    }
+
+    /**
+     * Checks if bench is already executed
+     * 
+     * @return boolean
+     * */
+    public function isExecuted()
+    {
+        return $this->executed;
     }
 }
