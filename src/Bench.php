@@ -3,12 +3,10 @@ namespace PHPLegends\Tests;
 
 class Bench
 {
-
     private $list          = array();
     private $results       = array();
     private $executed      = false;
     private $defaultCicles = 1000;
-
 
     public function __construct()
     {
@@ -18,6 +16,11 @@ class Bench
     public function __destruct()
     {
         $this->list = $this->results = null;
+    }
+
+    public function isExecuted()
+    {
+        return $this->executed;
     }
 
     public function defaultCicles($cicles = null)
