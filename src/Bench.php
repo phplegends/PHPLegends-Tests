@@ -3,14 +3,22 @@ namespace PHPLegends\Tests;
 
 class Bench
 {
-    private $list     = array();
-    private $results  = array();
-    private $executed = false;
+    private $list          = array();
+    private $results       = array();
+    private $executed      = false;
+    private $defaultCicles = 1000;
     private $emptyTest;
 
     public function __construct()
     {
         $this->emptyTest = $this->addTest(function() {})->cicles(1);
+    }
+
+    public function defaultCicles($cicles = null)
+    {
+        if (is_int($cicles)) {
+            $this->defaultCicles = $cicles;
+        }
     }
 
     public function __destruct()
@@ -27,6 +35,8 @@ class Bench
         $result = &$this->results[count($this->results)];
 
         $current = new BenchObject($func, $result);
+
+        $current->cicles($this->defaultCicles);
 
         $this->list[] = $current;
 
@@ -58,7 +68,7 @@ class Bench
         }
     }
 
-    protected function perfom($index)
+    private function perfom($index)
     {
         $obj = $this->list[$index];
 

@@ -74,11 +74,11 @@ class BenchObject
 
     public function memory()
     {
-        return empty($this->result['memory']) ? false : $this->result['memory'];
+        return isset($this->result['memory']) ? $this->result['memory'] : false;
     }
 
     public function time()
     {
-        return empty($this->result['time']) ? false : $this->result['time'];
+        return isset($this->result['time']) ? $this->result['time'] : false;
     }
 }
