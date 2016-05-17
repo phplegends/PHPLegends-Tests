@@ -9,7 +9,8 @@ class BasicTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->bench = new Bench;
-        $this->test  = $this->bench->addTest(function() { 1 + 1; });
+        $this->test = $this->bench->addTest(function() { 1 + 1; });
+        $this->bench->run();
     }
 
     public function testBenchClass()
