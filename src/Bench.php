@@ -7,16 +7,15 @@ class Bench
     private $results       = array();
     private $executed      = false;
     private $defaultCicles = 1000;
-    private $emptyTest;
 
     public function __construct()
     {
-        $this->emptyTest = $this->addTest(function() {})->cicles(1);
+        $this->addTest(function() {})->cicles(1);
     }
 
     public function __destruct()
     {
-        $this->emptyTest = $this->list = $this->results = null;
+        $this->list = $this->results = null;
     }
 
     public function defaultCicles($cicles = null)
@@ -35,12 +34,10 @@ class Bench
         $result = &$this->results[count($this->results)];
 
         $current = new BenchObject($result);
-        $current->call($func);
-        $current->cicles($this->defaultCicles);
 
-        $this->list[] = &$current;
+        $this->list[] = $current;
 
-        return $current;
+        return $current->call($func)->cicles($this->defaultCicles);
     }
 
     public function run()
