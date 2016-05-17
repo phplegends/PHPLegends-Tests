@@ -8,9 +8,8 @@ class BenchObject
     private $cicles = 1000;
     private $result;
 
-    public function __construct(callable $call, &$result)
+    public function __construct(&$result)
     {
-        $this->call = $call;
         $this->result = &$result;
     }
 
@@ -19,7 +18,7 @@ class BenchObject
         $this->remove();
     }
 
-    public function call(callable $call)
+    public function call(\Closure $call)
     {
         $this->call = $call;
         return $this;

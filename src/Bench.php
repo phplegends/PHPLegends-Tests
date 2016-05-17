@@ -14,6 +14,11 @@ class Bench
         $this->emptyTest = $this->addTest(function() {})->cicles(1);
     }
 
+    public function __destruct()
+    {
+        $this->emptyTest = $this->list = $this->results = null;
+    }
+
     public function defaultCicles($cicles = null)
     {
         if (is_int($cicles)) {
@@ -21,12 +26,7 @@ class Bench
         }
     }
 
-    public function __destruct()
-    {
-        $this->emptyTest = $this->list = $this->results = null;
-    }
-
-    public function addTest(callable $func)
+    public function addTest(\Closure $func)
     {
         if ($this->executed) {
             throw new \RuntimeException('addTest called after run start');
@@ -34,11 +34,11 @@ class Bench
 
         $result = &$this->results[count($this->results)];
 
-        $current = new BenchObject($func, $result);
-
+        $current = new BenchObject($result);
+        $current->call($func);
         $current->cicles($this->defaultCicles);
 
-        $this->list[] = $current;
+        $this->list[] = &$current;
 
         return $current;
     }
@@ -74,14 +74,14 @@ class Bench
 
         $cicles = $obj->getCicles();
 
-        $inTime   = microtime();
+        $inTime   = microtime(true);
         $inMemory = memory_get_usage();
 
         for ($i = 0; $i < $cicles; ++$i) {
             $obj->exec();
         }
 
-        $time   = microtime() - $inTime;
+        $time   = microtime(true) - $inTime;
         $memory = memory_get_usage() - $inMemory;
 
         $obj = null;
