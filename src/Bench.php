@@ -18,10 +18,6 @@ class Bench implements \IteratorAggregate
         $this->list = $this->results = null;
     }
 
-    public function isExecuted()
-    {
-        return $this->executed;
-    }
 
     public function defaultCicles($cicles = null)
     {
@@ -112,6 +108,7 @@ class Bench implements \IteratorAggregate
     public function getIterator()
     {
         if (! $this->isExecuted()) {
+            
             $this->run();
         }
 
