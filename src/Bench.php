@@ -1,7 +1,7 @@
 <?php
 namespace PHPLegends\Tests;
 
-class Bench
+class Bench implements \IteratorAggregate
 {
 
     private $list          = array();
@@ -96,5 +96,21 @@ class Bench
     public function isExecuted()
     {
         return $this->executed;
+    }
+
+    /**
+     * Implementation for \ArrayIterator
+     * 
+     * @todo Bench::$results MUST be BenchObject array
+     * @return \ArrayIterator
+     * */
+
+    public function getIterator()
+    {
+        if (! $this->isExecuted()) {
+            $this->run();
+        }
+
+        return new \ArrayIterator($this->results);
     }
 }
