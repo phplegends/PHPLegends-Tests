@@ -1,4 +1,4 @@
-#PHPLegends\Test\Bench
+# PHPLegends\Test\Bench
 
 ![travis-ci](https://travis-ci.org/phplegends/tests.svg?branch=master)
 
