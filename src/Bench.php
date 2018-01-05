@@ -90,9 +90,9 @@ class Bench implements \IteratorAggregate
 
     /**
      * Checks if bench is already executed
-     * 
+     *
      * @return boolean
-     * */
+     */
     public function isExecuted()
     {
         return $this->executed;
@@ -100,15 +100,13 @@ class Bench implements \IteratorAggregate
 
     /**
      * Implementation for \ArrayIterator
-     * 
+     *
      * @todo Bench::$results MUST be BenchObject array
      * @return \ArrayIterator
-     * */
-
+     */
     public function getIterator()
     {
-        if (! $this->isExecuted()) {
-            
+        if (!$this->isExecuted()) {
             $this->run();
         }
 
